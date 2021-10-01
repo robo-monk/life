@@ -1,23 +1,39 @@
 <script>
-  import { Life } from "../logic/Life"
-  import { Cell } from "../logic/Cell"
+// @ts-nocheck
+  import { Life } from "../logic/Life";
+  import { Cell } from "../logic/Cell";
 
   const life = new Life();
+  $: cells = life.cells;
 
-  let cell = new Cell();
+  let cell = new Cell({
+    life,
+    x: 400, y: 400
+  });
 
-  cell.create()
+  cell.create();
+  cell.right.create().right.create().bottom.create().bottom.bottom.create().right.right.right.right.create()
 
-  console.log(life.cells)
-
+  cell.check(true)
+  console.log(life.cells);
   
+  console.log(life.cells)
 </script>
 
-<div></div>
-
-
+<div>
+  {#each cells as cell, i}
+    <div class='cell' style="top: {cell.y}px; left: {cell.x}px;">
+    </div> 
+  {/each}
+</div>
 
 <style>
+  .cell {
+    background: black;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+  }
   /* button {
     font-family: inherit;
     font-size: inherit;
