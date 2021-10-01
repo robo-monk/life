@@ -1,20 +1,24 @@
 <script>
   import { Life } from "../logic/Life"
+  import { Cell } from "../logic/Cell"
 
   const life = new Life();
 
-  let count = 0
-  const increment = () => {
-    count += 1
-  }
+  let cell = new Cell();
+
+  cell.create()
+
+  console.log(life.cells)
+
+  
 </script>
 
-<button on:click={increment}>
-  Clicks: {count}
-</button>
+<div></div>
+
+
 
 <style>
-  button {
+  /* button {
     font-family: inherit;
     font-size: inherit;
     padding: 1em 2em;
@@ -34,5 +38,5 @@
 
   button:active {
     background-color: rgba(255, 62, 0, 0.2);
-  }
+  } */
 </style>

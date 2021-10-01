@@ -1,10 +1,10 @@
 <script>
-  import logo from './assets/svelte.png'
+  // import logo from './assets/svelte.png'
   import Life from './lib/Life.svelte'
 </script>
 
 <main>
-  <img src={logo} alt="Svelte Logo" />
+  <!-- <img src={logo} alt="Svelte Logo" /> -->
   <h1>Hello world!</h1>
 
   <Life />
