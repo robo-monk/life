@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { nanoid } from 'nanoid'
-const cellSize = 50;
+const cellSize = 45;
 const cellMargin = 5;
 const gap = cellSize + cellMargin
 

@@ -13,17 +13,49 @@
 
   $: cells = life.cells;
 
-  let cell = new Cell({
-    life,
-    alive: true,
-    x: 400,
-    y: 400,
-  });
+  function buildCross(x, y) {
+    let cell = new Cell({
+      life,
+      alive: true,
+      x,
+      y,
+    });
+    cell.right.alive = true;
+    cell.bottom.alive = true;
+    cell.bottom.bottom.alive = true;
+    cell.bottom.bottom.bottom.alive = true;
+    cell.top.alive = true;
+    cell.left.alive = true;
+  }
 
-  cell.right.alive = true;
-  cell.bottom.alive = true;
-  cell.top.alive = true;
-  cell.left.alive = true;
+  
+  buildCross(200, 200)
+  buildCross(400, 400)
+  buildCross(400, 200)
+  buildCross(800, 200)
+  buildCross(800, 400)
+  buildCross(800, 800)
+
+
+  function buildHept(x, y) {
+    let cell = new Cell({
+      life, alive: true, x, y
+    })
+
+    cell.bottom.alive = true
+    cell.bottom.right.alive = true
+    cell.bottom.right.right.alive = true
+    cell.bottom.right.bottom.alive = true
+    cell.bottom.right.right.alive = true
+    cell.bottom.right.right.top.alive = true
+    cell.bottom.right.right.top.right.alive = true
+
+  }
+
+  buildHept(2500, 500) 
+  buildCross(2800, 1800)
+
+  // buildCross(400, 400)
 
   Mousetrap.bind("right", function (e) {
     life = life.check();
@@ -61,7 +93,7 @@
 
   $: if (settings.autoplay) {
     autoplay(settings.speed / 10);
-  }
+  } else { clearInterval(i)}
 </script>
 
 <Draggable bind:draggable={canvasDragable}>
@@ -91,8 +123,8 @@
     color: black;
     background: white;
     position: absolute;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
 
   .cell.dead {
