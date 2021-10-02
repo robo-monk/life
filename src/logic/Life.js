@@ -1,5 +1,4 @@
 import { Cell } from "./Cell";
-import console from "../helpers/console";
 
 export class Life {
   constructor() {
