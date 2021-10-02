@@ -2,27 +2,39 @@
 // @ts-nocheck
   import { Life } from "../logic/Life";
   import { Cell } from "../logic/Cell";
+  import Mousetrap from 'mousetrap'
 
-  const life = new Life();
+  let life = new Life();
   $: cells = life.cells;
 
   let cell = new Cell({
-    life,
+    life, alive: true,
     x: 400, y: 400
   });
 
-  cell.create();
-  cell.right.create().right.create().bottom.create().bottom.bottom.create().right.right.right.right.create()
+  cell.right.alive = true
+  cell.right.bottom.alive = true
+  cell.right.bottom.bottom.alive = true
+  cell.left.alive = true
 
-  cell.check(true)
-  console.log(life.cells);
+  Mousetrap.bind('space', async function(e) {
+    console.log('spaceeeeeee')
+    life = await life.check()
+    console.log(life.cells);
+  });
+ 
+  // cell.check(true)
+
+  // life.check()
+  // life.check()
+  // life.check()
   
-  console.log(life.cells)
+  // console.log(life.cells)
 </script>
 
 <div>
-  {#each cells as cell, i}
-    <div class='cell' style="top: {cell.y}px; left: {cell.x}px;">
+  {#each ([...cells]).filter(c => true || c.alive) as cell, i}
+    <div class='cell {cell.alive ? '' : 'dead'}' id={cell.id} style="top: {cell.y}px; left: {cell.x}px;">
     </div> 
   {/each}
 </div>
@@ -33,6 +45,11 @@
     position: absolute;
     width: 50px;
     height: 50px;
+  }
+
+  .cell.dead {
+    background: gray;
+    display: none;
   }
   /* button {
     font-family: inherit;

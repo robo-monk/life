@@ -1,15 +1,16 @@
 // @ts-nocheck
 import console from '../helpers/console'
-
+import { nanoid } from 'nanoid'
 const cellSize = 50;
 const cellMargin = 5;
+const gap = cellSize + cellMargin
 
 export class Cell {
 	constructor({
-		life, x, y, top, left, right, bottom, alive = true
+		life, x, y, top, left, right, bottom, alive = false
 	}) {
+		this.id = nanoid() //=> "V1StGXR8_Z5jdHi6B-myT" 
 		this.life = life
-		this.alive = alive || void 0
 
 		this._top = top
 		this._left = left
@@ -18,49 +19,123 @@ export class Cell {
 
 		this.setPosition(x, y)
 		console.log('initiated', this)
+
+		this.alive = alive
 		// this = { ...this, top, left, right, bottom }
 	}
 
+	get element() {
+		return document.getElementById(this.id)
+	}
+
+	set alive(n) {
+		// console.log('this setting alive', n, this.alive)
+		if (n && this._alive) return console.log('this was already alive', this);
+
+		this._alive = n
+		if (n) {
+			this.create()
+		} else {
+			this.die()
+		}
+	}
+
+	get alive(){
+		return this._alive ? true : false
+	}
+
 	get right() {
-		if (this._right) return this._right
-		this._right = this.generateCell([1, 0])
-		return this._right
+		return this.getOrGenerate([1, 0])
+		// if (this._right) return this._right
+		// this._right = this.generateCell([1, 0])
+		// return this._right
 	}
 
 	get left() {
-		if (this._left) return this._left
-		this._left = this.generateCell([-1, 0])
-		return this._left
+		return this.getOrGenerate([-1, 0])
+		// if (this._left) return this._left
+		// this._left = this.generateCell([-1, 0])
+		// return this._left
 	}
 
 	get bottom() {
-		if (this._bottom) return this._bottom
-		this._bottom = this.generateCell([0, 1])
-		return this._bottom
+		return this.getOrGenerate([0, 1])
+		// if (this._bottom) return this._bottom
+		// this._bottom = this.generateCell([0, 1])
+		// return this._bottom
 		
 	}
 	
 	get top() {
-		if (this._top) return this._top
-		this._top = this.generateCell([0, -1])
-		return this._top
+		return this.getOrGenerate([0, -1])
+		// if (this._top) return this._top
+		// this._top = this.generateCell([0, -1])
+		// return this._top
+	}
+
+	getOrGenerate([x, y]) {
+		let cell = this.life.get(...this.getAbsoluteCoords([x, y]))
+		if (cell) return cell
+		return this.generateCell([x, y])
 	}
 
 	
 	get neighboors() {
 		return [ this.top.left, this.top, this.top.right, this.left, this.right, this.bottom.left, this.bottom, this.bottom.right];
 	}
+	get aliveNeighboors() {
+		return this.neighboors.filter(n => n.alive)
+	}
 
-	check(reset=true) {
-		if (reset) this.checked = false;
-		if (this.checked) return this;
+	static check(self, directOnly=false) {
+		console.log('>> checking..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
+		// if (reset) self.checked = false;
 
-		console.log('checking')
-		// this.neighboors.forEach(n => n.check())
+		self.checked = true
+
+		let cbs = directOnly ? [] : self.neighboors.map(n => Cell.check(n, true))
+		let ourCb; 
+
+		// ## Rules
+		// 	1. Any life cell with `neigboors==2 || neightboors==3 survives`
+		// 	2. Any dead cell with `neigboors==3 revives`
+		// 	3. Any others, die 
+
+		// this.neighboors.forEach(n => {
+		// let self = this;
+		
+		if (self.alive && (self.aliveNeighboors.length == 2 || self.aliveNeighboors.length == 3)) {
+			ourCb = () => { 
+				console.log('>> living..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
+			}
+		} else if (!self.alive && self.aliveNeighboors.length == 3){
+			ourCb = () => { 
+				console.log('>> reviving..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
+				self.alive = true
+			}
+		} else {
+			ourCb = () => { 
+				console.log('>> dying..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
+				self.alive = false
+			}
+		}
+
+		return () => {
+			cbs.forEach(cb => cb && cb())
+			ourCb()
+		}
+		// })
+		// console.log('checking')
+
+		// this.generateCell([], true);
 
 		// this.checked = true
 		// trigger check for each available neighboor
-		return this;
+		// return this;
+	}
+
+	die(){
+		this.life.kill(this)
 	}
 
 	create() {
@@ -74,15 +149,17 @@ export class Cell {
 		this.y = y
 	}
 
+	getAbsoluteCoords([x, y]) {
+		return ([this.x + x*gap, this.y + y*gap])
+	}
 
-	generateCell([x, y]) {
+	generateCell([x, y], alive=false) {
 		/*
 			x=0, y=0, generate cell in the current position
 			x=1, y=0, generate cell in the right 
 			x=-1, y=-1, generate cell in the left bottom 
 		*/
-
-		[x, y] = ([this.x + x*(cellSize + cellMargin), this.y + y*(cellMargin + cellSize)])
+		[x, y] = this.getAbsoluteCoords([x, y])
 
 		let relative; // 'top', 'right', 'left', 'bottom', where are we relative to the new cell? 
 		if (x==0) {
@@ -94,15 +171,11 @@ export class Cell {
 
 		return new Cell({
 			life: this.life,
-			x, y,
+			x, y, alive,
 			[relative]: this
-		})
+		}).create()
 	}
 
-
-	// get aliveNeighboors() {
-	// 	return [ this.topLeft, this.top, this.topRight, this.left, this.right, this.bottomLeft, this.bottom, this.bottomRight].filter(n => !!n)
-	// }
 
 	// getAllLeftNeihgboors() {
 	// 	return [ this.left, this.top.left, this.bottom.left ]
