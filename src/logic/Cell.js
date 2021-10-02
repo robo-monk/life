@@ -17,11 +17,9 @@ export class Cell {
 		this._bottom = bottom
 
 		this.setPosition(x, y)
-		// console.log('initiated', this)
 
 		this.alive = alive
 		this.cache = {} 
-		// this = { ...this, top, left, right, bottom }
 	}
 
 	get time() {
@@ -33,7 +31,6 @@ export class Cell {
 	}
 
 	set alive(n) {
-		// console.log('this setting alive', n, this.alive)
 		if (n && this._alive) return;
 
 		this._alive = n
@@ -89,12 +86,8 @@ export class Cell {
 	}
 
 	static check(self, recur=true) {
-		// console.log('>> checking..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
-		// if (reset) self.checked = false;
-		if (self.aliveNeighboors.length == 0) return () => { self.alive = false } 
 
 		if (self.lastChecked == self.time) return void 0
-
 		self.lastChecked = self.time
 
 		let cbs = self.alive ? self.neighboors.map(n => Cell.check(n, false)) : []
@@ -109,9 +102,7 @@ export class Cell {
 		// let self = this;
 		
 		if (self.alive && (self.aliveNeighboors.length == 2 || self.aliveNeighboors.length == 3)) {
-			ourCb = () => { 
-				// console.log('>> living..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
-			}
+			ourCb = void 0 
 		} else if (!self.alive && self.aliveNeighboors.length == 3) {
 			ourCb = () => { 
 				// console.log('>> reviving..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
@@ -126,7 +117,7 @@ export class Cell {
 
 		return () => {
 			cbs.forEach(cb => cb && cb())
-			ourCb()
+			ourCb && ourCb()
 		}
 	}
 
@@ -135,12 +126,7 @@ export class Cell {
 	}
 
 	create() {
-		// creates the cell 
-		if (this.created) return this
-
-		// this.created = true
 		this.life.create(this);
-		// if (!this._alive) this.forceKill = true
 		return this
 	}
 

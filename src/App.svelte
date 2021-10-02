@@ -1,6 +1,6 @@
 <script>
   // import logo from './assets/svelte.png'
-  import Life from './lib/Life.svelte'
+  import Life from "./lib/Life.svelte";
 </script>
 
 <main>
@@ -8,7 +8,7 @@
   <!-- <h1>Hello world!</h1> -->
 
   <Life />
-<!-- 
+  <!-- 
   <p>
     Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
     apps.
@@ -21,13 +21,12 @@
 </main>
 
 <style>
+  @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,300;0,400;0,700;1,300;1,700&display=swap");
   :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: "IBM Plex Mono", monospace;
 
     background-color: black;
   }
-
 
   main {
     text-align: center;
