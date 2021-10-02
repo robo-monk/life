@@ -2,7 +2,7 @@
   // @ts-nocheck
   //   import { Cell } from "../logic/Cell";
   import Mousetrap from "mousetrap";
-  let storedSettings = JSON.parse(localStorage.getItem("settings") || {});
+  let storedSettings = JSON.parse(localStorage.getItem("settings") || '{}');
   export const settings = {
     autoplay: false,
     speed: 0,
