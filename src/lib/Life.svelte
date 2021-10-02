@@ -5,9 +5,11 @@
   import Stats from "./Stats.svelte";
   import Mousetrap from "mousetrap";
   import Settings from "./Settings.svelte";
+  import Draggable from "./Draggable.svelte";
 
   let life = new Life();
   let settings = {};
+  let canvasDragable = false;
 
   $: cells = life.cells;
 
@@ -27,49 +29,64 @@
     life = life.check();
   });
 
+  Mousetrap.bind(
+    "space",
+    function (e) {
+      canvasDragable = true;
+      return false;
+    },
+    "keydown"
+  );
+  Mousetrap.bind(
+    "space",
+    function (e) {
+      canvasDragable = false;
+      return false;
+    },
+    "keyup"
+  );
+
   // frameRate = 1
 
   let i;
-  function autoplay(frameRate=1) {
+  function autoplay(frameRate = 1) {
     if (i) clearInterval(i);
     if (frameRate == 0) return;
     i = setInterval(() => {
       requestAnimationFrame(() => {
         life = life.check();
       });
-    }, 1000/frameRate);
+    }, 1000 / frameRate);
   }
 
   $: if (settings.autoplay) {
-    autoplay(settings.speed/10)
+    autoplay(settings.speed / 10);
   }
 </script>
 
-<div>
-  {#each [...cells].filter((c) => true || c.alive) as cell, i}
-    <div
-      class="cell {cell.alive ? '' : 'dead'}"
-      id={cell.id}
-      style="top: {cell.y}px; left: {cell.x}px;"
-    />
-  {/each}
-</div>
+<Draggable bind:draggable={canvasDragable}>
+  <div id="canvas">
+    {#each [...cells].filter((c) => true || c.alive) as cell, i}
+      <div
+        class="cell {cell.alive ? '' : 'dead'}"
+        id={cell.id}
+        style="top: {cell.y}px; left: {cell.x}px;"
+      />
+    {/each}
+  </div>
+</Draggable>
 
 <Stats bind:cells class="stats" />
 <Settings bind:settings class="settings" />
 
 <style>
-  .stats {
-    position: fixed;
-    top: 5px;
-    left: 5px;
+  #canvas {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 200vw;
+    height: 200vh;
   }
-  .stats {
-    position: fixed;
-    top: 5px;
-    right: 5px;
-  }
-
   .cell {
     color: black;
     background: white;

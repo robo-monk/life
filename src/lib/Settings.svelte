@@ -29,6 +29,7 @@
   :root {
     color: whitesmoke;
     font-size: 2em;
+
   }
 
   input[type='checkbox'] {
@@ -43,6 +44,11 @@
     display: flex;
     flex-direction: column;
     width: fit-content;
+	position: fixed;
+    top: 10px;
+    left: 10px; 
+
+	user-select: none;
   }
   span {
     text-align: left;

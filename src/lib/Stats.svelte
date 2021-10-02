@@ -26,6 +26,9 @@
     display: flex;
     flex-direction: column;
     width: fit-content;
+	position: fixed;
+	top: 10px;
+	right: 10px;
   }
   span {
     text-align: left;
