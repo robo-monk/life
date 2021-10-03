@@ -1,9 +1,5 @@
 // @ts-nocheck
 import { nanoid } from 'nanoid'
-const cellSize = 45;
-const cellMargin = 5;
-const gap = cellSize + cellMargin
-
 export class Cell {
 	constructor({
 		life, x, y, top, left, right, bottom, alive = false
@@ -85,7 +81,43 @@ export class Cell {
 		return this.neighboors.filter(n => n.alive)
 	}
 
-	static check(self, recur=true) {
+	static checkReverse(self) {
+
+		if (self.lastChecked == self.time) return void 0
+		self.lastChecked = self.time
+
+		// let cbs = self.alive ? self.neighboors.map(n => Cell.check(n, false)) : []
+		let cbs = self.alive ? self.neighboors.map(n => Cell.check(n, false)) : []
+		let ourCb; 
+
+		// ## Rules
+		// 	1. Any life cell with `neigboors==2 || neightboors==3 survives`
+		// 	2. Any dead cell with `neigboors==3 revives`
+		// 	3. Any others, die 
+
+		// 1. Any life with not 2 or 3
+
+		if (!(self.alive && (self.aliveNeighboors.length == 2 || self.aliveNeighboors.length == 3))) {
+			ourCb = void 0 
+		} else if (!(!self.alive && self.aliveNeighboors.length == 3)) {
+			ourCb = () => { 
+				// console.log('>> reviving..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
+				self.alive = true
+			}
+		} else {
+			ourCb = () => { 
+				// console.log('>> dying..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
+				self.alive = false
+			}
+		}
+
+		return () => {
+			cbs.forEach(cb => cb && cb())
+			ourCb && ourCb()
+		}
+	}
+
+	static check(self) {
 
 		if (self.lastChecked == self.time) return void 0
 		self.lastChecked = self.time
@@ -98,9 +130,6 @@ export class Cell {
 		// 	2. Any dead cell with `neigboors==3 revives`
 		// 	3. Any others, die 
 
-		// this.neighboors.forEach(n => {
-		// let self = this;
-		
 		if (self.alive && (self.aliveNeighboors.length == 2 || self.aliveNeighboors.length == 3)) {
 			ourCb = void 0 
 		} else if (!self.alive && self.aliveNeighboors.length == 3) {
@@ -136,7 +165,7 @@ export class Cell {
 	}
 
 	getAbsoluteCoords([x, y]) {
-		return ([this.x + x*gap, this.y + y*gap])
+		return ([this.x + x, this.y + y])
 	}
 
 	generateCell([x, y], alive=false) {

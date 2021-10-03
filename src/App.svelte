@@ -69,4 +69,14 @@
       max-width: none;
     }
   }
+
+
+  :global(.dragme) {
+    cursor: grab;
+    /* background: red; */
+  }
+
+  :global(.dragging) {
+    cursor: grabbing;
+  }
 </style>

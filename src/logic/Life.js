@@ -16,9 +16,24 @@ export class Life {
     );
   }
 
+  get aliveCells() {
+	  return this.cells.filter(c => c.alive)
+  }
+
+  checkReverse() {
+    let actions = [...this.cells].map((c) => {
+      return c.alive ? Cell.check(c) : () => c.die();
+    });
+
+    actions.forEach((action) => action && action());
+    this.time -= 1;
+
+    return this;
+  }
+
   check() {
     let actions = [...this.cells].map((c) => {
-      return c.alive ? Cell.check(c, true) : () => c.die();
+      return c.alive ? Cell.check(c) : () => c.die();
     });
     actions.forEach((action) => action && action());
 
