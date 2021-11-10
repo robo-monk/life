@@ -3,7 +3,7 @@
 
 ## Wishlist
 1. Move heavy tasks to background worker
-2. Go back in time
+2. Go back in time???
 3. Draw cells
 4. Hexagons
 
