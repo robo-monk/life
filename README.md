@@ -1,11 +1,15 @@
 # Game of Life
 
 
-## Wishlist
-1. Move heavy tasks to background worker
-2. Go back in time???
-3. Draw cells
-4. Hexagons
+## To Do List
+- [ ] Move game logic in background worker
+- [ ] Use scrollwheel to zoom in/ zoom out
+- [ ] Draw cells 
+
+## Wishlist/Bucket List
+- [ ] Is it possible to go back in time??
+- [ ] Hexagons
+- [ ] Frequencies
 
 ## Rules
 1. Any life cell with `neigboors==2 || neightboors==3 survives`
