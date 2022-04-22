@@ -94,7 +94,7 @@
   }
 
   const updateCoords = throttle((coords) => {
-    console.log("updating cors, coords", coords);
+    // console.log("updating cors, coords", coords);
     element.style.top = -(coords[0] - window.innerHeight / 2) + "px";
     element.style.left = -(coords[1] - window.innerWidth / 2) + "px";
   });

@@ -38,7 +38,7 @@ export class Cell {
 	}
 
 	get alive(){
-		return this._alive ? true : false
+		return !!this._alive
 	}
 
 	get right() {
