@@ -75,7 +75,12 @@
     position: fixed;
     top: 10px;
     right: 10px;
+
     user-select: none;
+        /* min-height: 200px; */
+    background-color: #18181876;
+    backdrop-filter: blur(10px);
+    padding: 20px;
   }
   span {
     text-align: left;

@@ -5,7 +5,7 @@
   const dispatch = createEventDispatcher();
 
   let element;
-  $: element;
+  // $: element;
 
   // drag
   // @ts-nocheck
@@ -93,7 +93,7 @@
     });
   }
 
-  const updateCoords = throttle((coords) => {
+  const updateCoords = throttle((coords, element) => {
     // console.log("updating cors, coords", coords);
     element.style.top = -(coords[0] - window.innerHeight / 2) + "px";
     element.style.left = -(coords[1] - window.innerWidth / 2) + "px";
@@ -101,7 +101,7 @@
 
   $: {
     if (element) {
-      updateCoords(coords);
+      updateCoords(coords, element);
       //   element.style.top = coords[0] + "px";
       //   element.style.left = coords[1] + "px";
     }

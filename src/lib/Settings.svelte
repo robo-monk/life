@@ -3,6 +3,7 @@
   //   import { Cell } from "../logic/Cell";
   import Mousetrap from "mousetrap";
   let storedSettings = JSON.parse(localStorage.getItem("settings") || '{}');
+
   export const settings = {
     autoplay: false,
     speed: 0,
@@ -37,6 +38,7 @@
   :root {
     color: whitesmoke;
     font-size: 2em;
+
   }
 
   input[type="checkbox"] {
@@ -56,7 +58,13 @@
     left: 10px;
 
     user-select: none;
+    min-width: 100px;
+        /* min-height: 200px; */
+      background-color: #18181876;
+      backdrop-filter: blur(10px);
+      padding: 20px;
   }
+
   span {
     text-align: left;
     display: flex;

@@ -1,7 +1,9 @@
 import { Cell } from "./Cell";
+import Eventful from "./Eventful";
 
-export class Life {
+export class Life extends Eventful {
   constructor() {
+    super();
     console.log("∞ initated life...");
 
     this.rows = new Map();
@@ -49,12 +51,15 @@ export class Life {
 
   create(cell) {
     if (!this.rows.has(cell.x)) this.rows.set(cell.x, new Map());
-
     this.rows.get(cell.x).set(cell.y, cell);
+
+    // this.dispatchEvent('updateCells')
   }
 
   kill(cell) {
     this.rows.get(cell.x)?.delete(cell.y);
     if (this.rows.get(cell.x) == 0) this.rows.delete(cell.x);
+
+    // this.dispatchEvent('updateCells')
   }
 }

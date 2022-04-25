@@ -117,6 +117,39 @@ export class Cell {
 		}
 	}
 
+	evaluateNextCycle() {
+		return Cell.evaluateNextCycle(this);
+	}
+
+	static evaluateNextCycle(self) {
+		// ## Rules
+		// 	1. Any life cell with `neigboors==2 || neightboors==3 survives`
+		// 	2. Any dead cell with `neigboors==3 revives`
+		// 	3. Any others, die 
+
+		if (self.alive && (self.aliveNeighboors.length == 2 || self.aliveNeighboors.length == 3)) {
+			return 'survive'
+		} else if (!self.alive && self.aliveNeighboors.length == 3) {
+			return 'revive'
+			ourCb = () => { 
+				// console.log('>> reviving..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
+				self.alive = true
+			}
+		} else {
+			return 'die'
+			ourCb = () => { 
+				// console.log('>> dying..', self.id, JSON.stringify(self.aliveNeighboors.length), self.alive)
+				self.alive = false
+			}
+		}
+
+		return () => {
+			cbs.forEach(cb => cb && cb())
+			ourCb && ourCb()
+		}
+
+	}
+
 	static check(self) {
 
 		if (self.lastChecked == self.time) return void 0
